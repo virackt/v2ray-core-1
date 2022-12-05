@@ -1,0 +1,79 @@
+{
+    "log":{
+        "loglevel":"debug",
+        "access": "access.log",
+        "error":"error.log"
+    },
+    "stats":{},
+    "api": {
+        "tag": "api",
+        "services":[
+            "HandlerService",
+            "StatsService"
+        ]
+    },
+    "policy": {
+        "levels": {
+            "0": {
+                "statsUserUplink": true,
+                "statsUserDownlink": true
+            }
+        },
+        "system": {
+            "statsInboundUplink": true,
+            "statsInboundDownlink": true,
+            "statsOutboundUplink": true,
+            "statsOutboundDownlink": true
+        }
+    },
+    "inbounds": [
+        {
+            "protocol": "vmess",
+            // "listen": "127.0.0.1",
+            "port": 8081,
+            "settings": {
+                "clients": [
+                    {
+                        "level": 0,
+                        "email": "test@gmail.com",
+                        "id": "f2435e5c-9ad9-4367-836a-8341117d0a5f"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp"
+            },
+            "tag": "proxy"
+        }
+    ],
+    "inboundDetour": [
+        {
+            "listen": "127.0.0.1",
+            "port": 10085,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "address": "127.0.0.1"
+            },
+            "tag": "api"
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom"
+        }
+    ],
+    "routing": {
+        "settings": {
+            "rules": [
+                {
+                    "inboundTag": [
+                        "api"
+                    ],
+                    "outboundTag": "api",
+                    "type": "field"
+                }
+            ]
+        },
+        "strategy": "rules"
+    }
+}
